@@ -280,49 +280,6 @@ def DisplayForm():
 	Year_text= StringVar()
 	ID_text= StringVar()
 
-
-	"""	
-	#-----------------------Label and Entries---------------------------------------------
-	Name_text= StringVar()
-	Gender_text= StringVar()
-	Course_text= StringVar()
-	Year_text= StringVar()
-	ID_text= StringVar()
-	Search_text=StringVar()
-
-	label_name=Label(window,text="Name")
-	label_name.grid(row=0,column=2)
-	entry_name=Entry(window,textvariable=Name_text)
-	entry_name.grid(row=0,column=3)
-
-	label_gender=Label(window,text="Gender")
-	label_gender.grid(row=1,column=2)
-	entry_gender=Entry(window,textvariable=Gender_text)
-	list1=['F','M']
-	droplist = OptionMenu(window,Gender_text,*list1)
-	droplist.config(width=15)
-	Gender_text.set('F')
-	droplist.grid(row=1,column=3)
-
-	label_course=Label(window,text="Course")
-	label_course.grid(row=0,column=4)
-	entry_course=Entry(window,textvariable=Course_text)
-	entry_course.grid(row=0,column=5)
-
-	label_year=Label(window,text="Year level")
-	label_year.grid(row=1,column=4)
-	entry_year=Entry(window,textvariable=Year_text)
-	list2=['1','2','3','4']
-	droplist = OptionMenu(window,Year_text,*list2)
-	droplist.config(width=15)
-	Year_text.set('1')
-	droplist.grid(row=1,column=5)
-
-	label_id=Label(window,text="ID no. (XXXX-XXXX)")
-	label_id.grid(row=0,column=6)
-	entry_id=Entry(window,textvariable=ID_text)
-	entry_id.grid(row=0,column=7)
-	"""
 	entry_name=Entry(window,textvariable=Name_text)
 	entry_gender=Entry(window,textvariable=Gender_text)
 	entry_course=Entry(window,textvariable=Course_text)
