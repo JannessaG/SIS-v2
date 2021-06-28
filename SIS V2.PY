@@ -11,15 +11,26 @@ def Database():
     conn = sqlite3.connect("student_database.db")
     cursor = conn.cursor()
    
-    cursor.execute("""CREATE TABLE IF NOT EXISTS student ( 
+    command1="""CREATE TABLE IF NOT EXISTS student ( 
 
     	STU_ID INTEGER NOT NULL,
     	STU_NAME VARCHAR(100) NOT NULL, 
     	STU_GENDER VARCHAR(1)NOT NULL, 
     	STU_YEAR INTEGER NOT NULL, 
-    	STU_COURSE VARCHAR(10) NOT NULL
+    	STU_COURSE VARCHAR(10)
 
-    	)""")
+    	)"""
+    cursor.execute(command1)
+
+    command2="""CREATE TABLE IF NOT EXISTS course(
+
+    	COUR_CODE VARCHAR(10) NOT NULL,
+    	COURSE VARCHAR(100) NOT NULL
+
+    	)""" 
+    cursor.execute(command2)
+
+   
 
 
 
@@ -58,7 +69,6 @@ def DisplayData():
 		tree.insert('','end',values=(data))
 	cursor.close()
 	conn.close()
-
 
 
 def DisplayForm():
@@ -280,6 +290,8 @@ def DisplayForm():
 	Year_text= StringVar()
 	ID_text= StringVar()
 
+	
+
 	entry_name=Entry(window,textvariable=Name_text)
 	entry_gender=Entry(window,textvariable=Gender_text)
 	entry_course=Entry(window,textvariable=Course_text)
@@ -345,6 +357,7 @@ def DisplayForm():
 	tree.heading("3",text="Gender")
 	tree.heading("4",text="Year")
 	tree.heading("5",text="Course")
+
 
 	DisplayData()
 
