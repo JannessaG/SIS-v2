@@ -13,11 +13,11 @@ def Database():
    
     cursor.execute("""CREATE TABLE IF NOT EXISTS student ( 
 
-    	STU_ID TEXT,
-    	STU_NAME TEXT, 
-    	STU_GENDER TEXT, 
-    	STU_YEAR INTEGER, 
-    	STU_COURSE TEXT
+    	STU_ID INTEGER NOT NULL,
+    	STU_NAME VARCHAR(100) NOT NULL, 
+    	STU_GENDER VARCHAR(1)NOT NULL, 
+    	STU_YEAR INTEGER NOT NULL, 
+    	STU_COURSE VARCHAR(10) NOT NULL
 
     	)""")
 
@@ -107,6 +107,13 @@ def DisplayForm():
 				tkMessageBox.showinfo("Message","Stored successfully")
 				DisplayData()
 				conn.close()
+				entry_search.delete(0,END)
+				entry_name.delete(0,END)
+				entry_gender.delete(0,END)
+				entry_course.delete(0,END)
+				entry_year.delete(0,END)
+				entry_id.delete(0,END)
+				window1.destroy()
 	
 
 		label_id=Label(window1,text="ID no.")
@@ -186,8 +193,14 @@ def DisplayForm():
 					conn.commit()
 					cursor.close()
 					DisplayData()
-					window2.destroy()
 					conn.close()
+					entry_search.delete(0,END)
+					entry_name.delete(0,END)
+					entry_gender.delete(0,END)
+					entry_course.delete(0,END)
+					entry_year.delete(0,END)
+					entry_id.delete(0,END)
+					window2.destroy()
 					
 
 
