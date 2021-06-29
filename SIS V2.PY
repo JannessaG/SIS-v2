@@ -156,12 +156,23 @@ def DisplayForm():
 			course=Course_text.get()
 			year=Year_text.get()
 
-			
-
 			if id=='' or name=='' or gender==''or course=='' or year=='':
 				tkMessageBox.showinfo("Warning","fill the empty field!",icon="warning")
 				window1.destroy()
-				register() 
+				register()
+				
+			data = conn.execute("SELECT * FROM student WHERE STU_ID='{}'".format(id)).fetchall()
+			data1 = conn.execute("SELECT * FROM student WHERE STU_NAME='{}'".format(name)).fetchall()
+
+			if data !=[]:
+				tkMessageBox.showinfo("Warning","Data already exist!",icon="warning")
+				window1.destroy()
+				register()
+
+			elif data1 !=[]:
+				tkMessageBox.showinfo("Warning","Data already exist!",icon="warning")
+				window1.destroy()
+				register()
 
 			else:
 				conn.execute('INSERT INTO student (STU_ID,STU_NAME,STU_COURSE,STU_YEAR,STU_GENDER) VALUES (?,?,?,?,?)',(id,name,course,year,gender));
