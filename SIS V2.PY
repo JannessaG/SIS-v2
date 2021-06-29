@@ -30,9 +30,7 @@ def Database():
     	)""" 
     cursor.execute(command2)
 
-   
-
-
+ #------------------------------BUTTON FUNCTION-----------------------------------
 
 def Delete():
     Database()
@@ -63,15 +61,64 @@ def SearchRecord():
 def DisplayData():
 	Database()
 	tree.delete(*tree.get_children())
-	cursor=conn.execute("SELECT STU_ID,STU_NAME,STU_GENDER,STU_YEAR,course.STU_COURSE,course.COURSE FROM student INNER JOIN course ON course.STU_COURSE=student.STU_COURSE")
+	cursor=conn.execute("SELECT STU_ID,STU_NAME,STU_GENDER,STU_YEAR,course.STU_COURSE,course.COURSE FROM student INNER JOIN course ON course.STU_COURSE=student.STU_COURSE ORDER BY STU_ID")
 	fetch=cursor.fetchall()
 	for data in fetch:
 		tree.insert('','end',values=(data))
 	cursor.close()
 	conn.close()
 
+def sort():
+	Database()
+	if Sort_text.get()=="Id":
+		tree.delete(*tree.get_children())
+		cursor=conn.execute("SELECT STU_ID,STU_NAME,STU_GENDER,STU_YEAR,course.STU_COURSE,course.COURSE FROM student INNER JOIN course ON course.STU_COURSE=student.STU_COURSE ORDER BY STU_ID")
+		fetch=cursor.fetchall()
+		for data in fetch:
+			tree.insert('','end',values=(data))
+		cursor.close()
+		conn.close()
+	elif Sort_text.get()=="Name":
+		tree.delete(*tree.get_children())
+		cursor=conn.execute("SELECT STU_ID,STU_NAME,STU_GENDER,STU_YEAR,course.STU_COURSE,course.COURSE FROM student INNER JOIN course ON course.STU_COURSE=student.STU_COURSE ORDER BY STU_NAME")
+		fetch=cursor.fetchall()
+		for data in fetch:
+			tree.insert('','end',values=(data))
+		cursor.close()
+		conn.close()
+	elif Sort_text.get()=="Gender":
+		tree.delete(*tree.get_children())
+		cursor=conn.execute("SELECT STU_ID,STU_NAME,STU_GENDER,STU_YEAR,course.STU_COURSE,course.COURSE FROM student INNER JOIN course ON course.STU_COURSE=student.STU_COURSE ORDER BY STU_GENDER")
+		fetch=cursor.fetchall()
+		for data in fetch:
+			tree.insert('','end',values=(data))
+		cursor.close()
+		conn.close()
+	elif Sort_text.get()=="Year":
+		tree.delete(*tree.get_children())
+		cursor=conn.execute("SELECT STU_ID,STU_NAME,STU_GENDER,STU_YEAR,course.STU_COURSE,course.COURSE FROM student INNER JOIN course ON course.STU_COURSE=student.STU_COURSE ORDER BY STU_YEAR")
+		fetch=cursor.fetchall()
+		for data in fetch:
+			tree.insert('','end',values=(data))
+		cursor.close()
+		conn.close()
+	elif Sort_text.get()=="Course":
+		tree.delete(*tree.get_children())
+		cursor=conn.execute("SELECT STU_ID,STU_NAME,STU_GENDER,STU_YEAR,course.STU_COURSE,course.COURSE FROM student INNER JOIN course ON course.STU_COURSE=student.STU_COURSE ORDER BY course.STU_COURSE,course.COURSE")
+		fetch=cursor.fetchall()
+		for data in fetch:
+			tree.insert('','end',values=(data))
+		cursor.close()
+		conn.close()
+
+
+
+
+#--------------------------------------------------------------------------------------------------------
 
 def DisplayForm():
+
+	#BUTTON FUNCTION
 
 	def Exit():
 			Exit=tkMessageBox.askyesno("Student Information System","Confirm if you want to exit")
@@ -90,6 +137,8 @@ def DisplayForm():
 
 	def register():
 
+		#WINDOW FOR ADDING NEW STUD
+
 		window1= Toplevel()
 		window1.geometry("400x400")
 		window1.title("Register Student")
@@ -107,10 +156,13 @@ def DisplayForm():
 			course=Course_text.get()
 			year=Year_text.get()
 
+			
+
 			if id=='' or name=='' or gender==''or course=='' or year=='':
-				tkMessageBox.showinfo("Warning","fill the empty field!")
+				tkMessageBox.showinfo("Warning","fill the empty field!",icon="warning")
 				window1.destroy()
-				register()
+				register() 
+
 			else:
 				conn.execute('INSERT INTO student (STU_ID,STU_NAME,STU_COURSE,STU_YEAR,STU_GENDER) VALUES (?,?,?,?,?)',(id,name,course,year,gender));
 				conn.commit()
@@ -125,6 +177,7 @@ def DisplayForm():
 				entry_id.delete(0,END)
 				window1.destroy()
 	
+		#LABEL, ENTRY ,TREE 
 
 		label_id=Label(window1,text="ID no.")
 		label_id.place(x=115,y=50)
@@ -170,10 +223,12 @@ def DisplayForm():
 	
 	def Update():
 
+		#UPDATE BUTTON FUNCTION
+
 		if not tree.selection():
-			tkMessageBox.showwarning("Warning","Select data to delete")
+			tkMessageBox.showwarning("Warning","Select data to Update",icon="warning")
 		else:
-			result =tkMessageBox.askquestion('Confirm', 'Are you sure you want to update this record?',icon="warning")
+			result =tkMessageBox.askquestion('Confirm', 'Are you sure you want to update this record?',icon="question")
 			if result == 'yes':
 				window2= Toplevel()
 				window2.geometry("400x400")
@@ -321,7 +376,7 @@ def DisplayForm():
 	window.title("Student Information System")
 	global tree,tree2
 	global SEARCH
-	global Name_text,Gender_text,Course_text,Year_text,ID_text,Search_text,courselist_text
+	global Name_text,Gender_text,Course_text,Year_text,ID_text,Search_text,courselist_text,Sort_text
 
 
 	Search_text=StringVar()
@@ -331,6 +386,7 @@ def DisplayForm():
 	Year_text= StringVar()
 	ID_text= StringVar()
 	courselist_text=StringVar()
+	Sort_text=StringVar()
 
 	
 
@@ -353,21 +409,34 @@ def DisplayForm():
 	label_space1=Label(window,text="            ")
 	label_space1.grid(row=4,column=0)
 
+
+	label_sort=Label(window,text="Sort by")
+	label_sort.place(x=39,y=136)
+	entry_sort=Entry(window,textvariable=Sort_text)
+	list4=['Id','Name','Gender','Year','Course']
+	droplist= OptionMenu(window,Sort_text,*list4)
+	droplist.config(width=10)
+	Sort_text.set('Name')
+	droplist.place(x=80,y=132)
+
 	#-----------------------BUTTONS-----------------
 	button_search=Button(window,text="Search",width=10,command=SearchRecord)
-	button_search.grid(row=3,column=3)
-
-	button_display=Button(window,text="Display All",width=12, command=DisplayData)
-	button_display.place(x=120,y=100)
-
-	button_add=Button(window,text="Add",width=12,command=register)
-	button_add.place(x=260,y=100)
-
-	button_update=Button(window,text="Update",width=12,command=Update)
-	button_update.place(x=420,y=100)
+	button_search.place(x=207,y=20)
 
 	button_delete=Button(window,text="Delete",width=10,command=Delete)
-	button_delete.grid(row=3,column=4)
+	button_delete.place(x=300,y=20)
+
+	button_display=Button(window,text="Display All",width=12, command=DisplayData)
+	button_display.place(x=39,y=80)
+
+	button_add=Button(window,text="Add",width=12,command=register)
+	button_add.place(x=140,y=80)
+
+	button_update=Button(window,text="Update",width=12,command=Update)
+	button_update.place(x=240,y=80)
+
+	button_Sort=Button(window,text="Sort",width=7,command=sort)
+	button_Sort.place(x=190,y=134)
 
 	button_clear=Button(window,text="Clear",width=9,command=Clear)
 	button_clear.place(x=620,y=130)
@@ -375,8 +444,8 @@ def DisplayForm():
 	button_exit=Button(window,text="Exit",width=9,command=Exit)
 	button_exit.place(x=700,y=130)
 
-	button_clear=Button(window,text="Course List",width=10,command=Course_list)
-	button_clear.place(x=700,y=20)
+	button_list=Button(window,text="Course List",width=10,command=Course_list)
+	button_list.place(x=700,y=20)
 
 	#--------------------------TREE VIEW------------------------
 
