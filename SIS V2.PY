@@ -24,7 +24,7 @@ def Database():
 
     command2="""CREATE TABLE IF NOT EXISTS course(
 
-    	COUR_CODE VARCHAR(10) NOT NULL,
+    	STU_COURSE VARCHAR(10) NOT NULL,
     	COURSE VARCHAR(100) NOT NULL
 
     	)""" 
@@ -53,7 +53,7 @@ def SearchRecord():
     Database()
     if Search_text.get() != "":
         tree.delete(*tree.get_children())
-        cursor=conn.execute("SELECT * FROM student WHERE STU_ID LIKE ?", ('%' + str(Search_text.get()) + '%',))
+        cursor=conn.execute("SELECT STU_ID,STU_NAME,STU_GENDER,STU_YEAR,course.STU_COURSE,course.COURSE FROM student INNER JOIN course ON course.STU_COURSE=student.STU_COURSE WHERE STU_ID LIKE ?", ('%' + str(Search_text.get()) + '%',))
         fetch = cursor.fetchall()
         for data in fetch:
             tree.insert('', 'end', values=(data))
@@ -63,7 +63,7 @@ def SearchRecord():
 def DisplayData():
 	Database()
 	tree.delete(*tree.get_children())
-	cursor=conn.execute("SELECT * FROM student")
+	cursor=conn.execute("SELECT STU_ID,STU_NAME,STU_GENDER,STU_YEAR,course.STU_COURSE,course.COURSE FROM student INNER JOIN course ON course.STU_COURSE=student.STU_COURSE")
 	fetch=cursor.fetchall()
 	for data in fetch:
 		tree.insert('','end',values=(data))
@@ -148,7 +148,7 @@ def DisplayForm():
 		label_course=Label(window1,text="Course")
 		label_course.place(x=110,y=160)
 		entry_course=Entry(window1,textvariable=Course_text)
-		list2=['BSCS','BSIT','BSCA','BSBIO']
+		list2=['BSCS','BSIT','BSCA','BSIS']
 		droplist= OptionMenu(window1,Course_text,*list2)
 		droplist.config(width=15)
 		Course_text.set('BSCS')
@@ -236,7 +236,7 @@ def DisplayForm():
 				label_course=Label(window2,text="Course")
 				label_course.place(x=110,y=160)
 				entry_course=Entry(window2,textvariable=Course_text)
-				list2=['BSCS','BSIT','BSCA','BSBIO']
+				list2=['BSCS','BSIT','BSCA','BSIS']
 				droplist= OptionMenu(window2,Course_text,*list2)
 				droplist.config(width=15)
 				Course_text.set('BSCS')
@@ -274,13 +274,54 @@ def DisplayForm():
 		entry_course.insert(0,values[4])
 		entry_name.focus()
 
+	#--------------------------------------COURSE WINDOW-------------------------
+	def Course_list():
+		window3= Tk()
+		window3.geometry("450x250")
+		window3.title("Course List")
+
+		def DisplayCourse():
+			Database()
+			tree2.delete(*tree2.get_children())
+			cursor=conn.execute("SELECT * FROM course")
+			fetch=cursor.fetchall()
+			for data in fetch:
+				tree2.insert('','end',values=(data))
+			cursor.close()
+			conn.close()
+
+
+		#----------------------TREE---------------------------
+
+		tree2= ttk.Treeview(window3,selectmode='browse')
+		tree2.place(x=10,y=10)
+		vsb= ttk.Scrollbar(window3, orient ="vertical",command=tree.yview)
+		vsb.place(x=430,y=10,height=225)
+		tree2.configure(yscrollcommand=vsb.set)
+		tree2["columns"]=("1","2")
+
+		tree2["show"]="headings"
+		tree2.column("1",width =100,anchor='c') 
+		tree2.column("2",width =300,anchor='c')
+
+		tree2.heading("1",text="Course Code")
+		tree2.heading("2",text="Course")
+
+		DisplayCourse()
+
+		window3.mainloop()
+
+
+
+
+
 	#----------------------------------------------------
 	window= Tk()
 	window.geometry("800x430")
 	window.title("Student Information System")
-	global tree
+	global tree,tree2
 	global SEARCH
-	global Name_text,Gender_text,Course_text,Year_text,ID_text,Search_text
+	global Name_text,Gender_text,Course_text,Year_text,ID_text,Search_text,courselist_text
 
 
 	Search_text=StringVar()
@@ -289,6 +330,7 @@ def DisplayForm():
 	Course_text= StringVar()
 	Year_text= StringVar()
 	ID_text= StringVar()
+	courselist_text=StringVar()
 
 	
 
@@ -330,9 +372,11 @@ def DisplayForm():
 	button_clear=Button(window,text="Clear",width=9,command=Clear)
 	button_clear.place(x=620,y=130)
 
-
 	button_exit=Button(window,text="Exit",width=9,command=Exit)
 	button_exit.place(x=700,y=130)
+
+	button_clear=Button(window,text="Course List",width=10,command=Course_list)
+	button_clear.place(x=700,y=20)
 
 	#--------------------------TREE VIEW------------------------
 
@@ -343,20 +387,22 @@ def DisplayForm():
 	vsb.place(x=769,y=170,height=225)
 	tree.configure(yscrollcommand=vsb.set)
 	tree.bind('<ButtonRelease-1>',get_selected_row)
-	tree["columns"]=("1","2","3","4","5")
+	tree["columns"]=("1","2","3","4","5","6")
 
 	tree["show"]="headings"
-	tree.column("1",width =150,anchor='c') 
-	tree.column("2",width =150,anchor='c') 
-	tree.column("3",width =150,anchor='c') 
-	tree.column("4",width =150,anchor='c')
-	tree.column("5",width =150,anchor='c') 
+	tree.column("1",width =110,anchor='c') 
+	tree.column("2",width =130,anchor='c') 
+	tree.column("3",width =50,anchor='c') 
+	tree.column("4",width =50,anchor='c')
+	tree.column("5",width =100,anchor='c') 
+	tree.column("6",width =310,anchor='c') 
 
 	tree.heading("1",text="ID no.")
 	tree.heading("2",text="Name")
 	tree.heading("3",text="Gender")
 	tree.heading("4",text="Year")
-	tree.heading("5",text="Course")
+	tree.heading("5",text="Course Code")
+	tree.heading("6",text="Course")
 
 
 	DisplayData()
