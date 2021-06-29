@@ -296,7 +296,6 @@ def DisplayForm():
 				list1=['F','M']
 				droplist = OptionMenu(window2,Gender_text,*list1)
 				droplist.config(width=15)
-				Gender_text.set('F')
 				droplist.place(x=150,y=120)
 				
 				label_course=Label(window2,text="Course")
@@ -305,7 +304,6 @@ def DisplayForm():
 				list2=['BSCS','BSIT','BSCA','BSIS']
 				droplist= OptionMenu(window2,Course_text,*list2)
 				droplist.config(width=15)
-				Course_text.set('BSCS')
 				droplist.place(x=150,y=160)
 				
 				label_year=Label(window2,text="Year level")
