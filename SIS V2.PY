@@ -390,6 +390,7 @@ def DisplayForm():
             values=tree2.item(selected,'values')
             entry_cc.insert(0,values[0])
             entry_c.insert(0,values[1])
+            entry_cc.focus()
 
 
         def addwindow():
@@ -397,6 +398,9 @@ def DisplayForm():
             window4= Toplevel()
             window4.geometry("400x200")
             window4.title("ADD Course")
+
+            global entry_cc,entry_c
+            global droplist
 
             def addCOURSE():
                 Database()
@@ -463,6 +467,8 @@ def DisplayForm():
                     window5.geometry("400x200")
                     window5.title("Update Course List")
 
+                    global entry_cc,entry_c
+
                     def updatecourse():
                         Database()
 
@@ -484,6 +490,21 @@ def DisplayForm():
                         entry_cc.delete(0,END)
                         entry_c.delete(0,END)
                         window5.destroy()
+                    conn=sqlite3.connect('student_database.db')
+                    c=conn.cursor()
+
+                    entry_cc=Entry(window5,textvariable=course_code)
+                    entry_c=Entry(window5,width=30,textvariable=course_text)
+
+                    entry_cc.delete(0,END)
+                    entry_c.delete(0,END)
+                    selected=tree2.focus()
+                    values=tree2.item(selected,'values')
+                    entry_cc.insert(0,values[0])
+                    entry_c.insert(0,values[1])
+
+                    conn.commit()
+                    conn.close()
 
                     label_cc=Label(window5,text="Course Code")
                     label_cc.place(x=110,y=50)
